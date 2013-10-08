@@ -1,5 +1,7 @@
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
+scriptencoding utf-8
+set encoding=utf-8
 set nocompatible
 syntax on
 set t_Co=256
@@ -67,7 +69,8 @@ filetype plugin on
 filetype indent on
 
 " Display tabs and trailing spaces visually
-set list listchars=tab:\ \ ,trail:·
+set list 
+set listchars=tab:\ \ ,trail:·
 
 set nowrap       "Don't wrap lines
 set linebreak    "Wrap lines at convenient points
