@@ -1,90 +1,70 @@
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
+" These must be first, because they change other options as a side effect.
 scriptencoding utf-8
-set encoding=utf-8
 set nocompatible
-syntax on
-set t_Co=256
-colorscheme molokai
-let g:molokai_original = 0
+execute pathogen#infect()
 
-" TODO: this may not be in the correct place. It is intended to allow overriding <Leader>.
-" source ~/.vimrc.before if it exists.
-if filereadable(expand("~/.vimrc.before"))
-  source ~/.vimrc.before
-endif
 
-" ================ General Config ====================
+" ========== Behavior ============
 
-set number                      "Line numbers are good
-set backspace=indent,eol,start  "Allow backspace in insert mode
+let mapleader=","
+set encoding=utf-8              "UTF8 everywhere
+set backspace=indent,eol,start  "Fix backspace not working "
 set history=1000                "Store lots of :cmdline history
-set showcmd                     "Show incomplete cmds down the bottom
-set showmode                    "Show current mode down the bottom
-set gcr=a:blinkon0              "Disable cursor blink
-set visualbell                  "No sounds
-set autoread                    "Reload files changed outside vim
 
-" This makes vim act like all other editors, buffers can
-" exist in the background without being in a window.
-" http://items.sjbach.com/319/configuring-vim-right
-set hidden
+"Clear last search
+nmap <C-c>c :let<space>@/=""<CR>
+set hlsearch                    "Hilight searches by default
+set incsearch                   "Find the next match as we type the search
 
-"turn on syntax highlighting
-syntax on
+" save swap file to this directory, instead of the current one
+set directory=~/.vim/swp//
 
-" ================ Search Settings  =================
 
-set incsearch        "Find the next match as we type the search
-set hlsearch         "Hilight searches by default
-set viminfo='100,f1  "Save up to 100 marks, enable capital marks
+" ================  Display  ========================
 
-" ================ Turn Off Swap Files ==============
+set ls=2             "Always display statusline filename at bottom
+set nowrap           "Don't wrap lines
+set linebreak        "Wrap lines at convenient points
 
-set noswapfile
-set nobackup
-set nowb
+set number           "Display line number
+set showcmd          "Show incomplete cmds down the bottom
+set showmode         "Show current mode down the bottom
+set gcr=a:blinkon0   "Disable cursor blink
+set visualbell       "No sounds
+set autoread         "Reload files changed outside vim
 
-" ================ Persistent Undo ==================
-" Keep undo history across sessions, by storing in file.
-" Only works all the time.
+" PEP8 guideline
+autocmd Filetype python setlocal set colorcolumn=81
 
-silent !mkdir ~/.vim/backups > /dev/null 2>&1
-if version >= 703
-    set undodir=~/.vim/backups
-    set undofile
-endif
+" colorscheme
+set t_Co=256
+let g:molokai_original = 0
+colorscheme molokai
+
 
 " ================ Indentation ======================
 
-set autoindent
-set smartindent
+" Indent behavior
 set smarttab
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
 set expandtab
+set smartindent
+set autoindent
+set softtabstop=4  shiftwidth=4  tabstop=4
+autocmd BufRead,BufNewFile *.ctp setlocal ts=2 sts=2 sw=2
+autocmd Filetype html setlocal ts=2 sts=2 sw=2
 
-filetype plugin on
-filetype indent on
-
-" Display tabs and trailing spaces visually
-set list 
+"Display tabs and trailing spaces visually
+set list
 set listchars=tab:\ \ ,trail:·
 
-set nowrap       "Don't wrap lines
-set linebreak    "Wrap lines at convenient points
+" Delete spaces in empty lines on save
+autocmd BufWritePre * :%s/\s\+$//e
 
-" ================ Folds ============================
 
-set foldmethod=indent   "fold based on indent
-set foldnestmax=3       "deepest fold is 3 levels
-set nofoldenable        "dont fold by default
+" ========= Path completion =======
 
-" ================ Completion =======================
-
-set wildmode=list:longest
 set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
+set wildmode=list:longest
 set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
 set wildignore+=*vim/backups*
 set wildignore+=*sass-cache*
@@ -96,16 +76,42 @@ set wildignore+=log/**
 set wildignore+=tmp/**
 set wildignore+=*.png,*.jpg,*.gif
 
-"
 
-" ================ Scrolling ========================
+" =========== Plugins settings ========
 
-set scrolloff=8         "Start scrolling when we're 8 lines away from margins
-set sidescrolloff=15
-set sidescroll=1
+" gitGutter config
+highlight clear SignColumn
+set updatetime=1000
 
-"
+" indent guide
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_auto_colors=0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=235
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=234
 
-" ================  Display  ========================
+" NERDtree
+map <C-n> :NERDTreeToggle<CR>
 
-set ls=2                "Always display statusline filename at bottom
+" NERDCommenter, Ctrl+/ to toggle comments
+map <C-_> <leader>c<space>
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" ============== Key mapping ===========
+
+" Shift+Tab unindents a line "
+nmap <S-tab> <<
+
+" exit insert mode with jk
+inoremap jk <esc>
+
+" delete something, don't cut it
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+vnoremap <leader>p "_dP
+
+" duplicate a line
+nnoremap <C-D> yyp

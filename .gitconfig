@@ -1,6 +1,6 @@
 [user]
-    name = Julian-GUERIN
-    email = julian.guerin@gmail.com
+    name = robin_moisson
+    email = robin.moisson@gmail.com
 [color]
     diff   = auto
     branch = auto
@@ -39,7 +39,7 @@
 [difftool]
     prompt = false
 [github]
-    user = nmalzieu
+    user = moissonr
 [push]
     default = tracking
 [help]
